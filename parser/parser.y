@@ -3119,36 +3119,23 @@ FunctionCallNonKeyword:
 	{
 		$$ = &ast.FuncCallExpr{FnName: model.NewCIStr($1), Args: $3.([]ast.ExprNode)}
 	}
-|	FunctionNameDateArithMultiForms '(' Expression ',' Expression ')'
+|	FunctionNameDateArithMultiForms '(' Expression ',' IntervalTimeFunc ')' %prec lowerThanIntervalTimeFunc
 	{
 		$$ = &ast.FuncCallExpr{
 			FnName: model.NewCIStr($1),
 			Args: []ast.ExprNode{
 				$3.(ast.ExprNode),
 				$5.(ast.ExprNode),
-				ast.NewValueExpr("DAY"),
 			},
 		}
 	}
-|	FunctionNameDateArithMultiForms '(' Expression ',' "INTERVAL" Expression TimeUnit ')' %prec lowerThanIntervalTimeFunc
+|	FunctionNameDateArith '(' Expression ',' IntervalTimeFunc ')' %prec lowerThanIntervalTimeFunc
 	{
 		$$ = &ast.FuncCallExpr{
 			FnName: model.NewCIStr($1),
 			Args: []ast.ExprNode{
 				$3.(ast.ExprNode),
-				$6.(ast.ExprNode),
-				ast.NewValueExpr($7),
-			},
-		}
-	}
-|	FunctionNameDateArith '(' Expression ',' "INTERVAL" Expression TimeUnit ')' %prec lowerThanIntervalTimeFunc
-	{
-		$$ = &ast.FuncCallExpr{
-			FnName: model.NewCIStr($1),
-			Args: []ast.ExprNode{
-				$3.(ast.ExprNode),
-				$6.(ast.ExprNode),
-				ast.NewValueExpr($7),
+				$5.(ast.ExprNode),
 			},
 		}
 	}
